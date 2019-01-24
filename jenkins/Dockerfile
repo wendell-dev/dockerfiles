@@ -2,3 +2,4 @@
 FROM jenkins/jenkins:alpine
 USER root
 RUN apk --update add docker
+USER jenkins
