@@ -36,7 +36,8 @@ ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 RUN mkdir -p $JENKINS_HOME \
   && chown ${uid}:${gid} $JENKINS_HOME \
   && addgroup -g ${gid} ${group} \
-  && adduser -h "$JENKINS_HOME" -u ${uid} -G ${group} -s /bin/bash -D ${user}
+  && adduser -h "$JENKINS_HOME" -u ${uid} -G ${group} -s /bin/bash -D ${user} \
+  && usermod -aG docker ${user}
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
 VOLUME $JENKINS_HOME
@@ -73,6 +74,3 @@ ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
 # from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup /usr/share/jenkins/ref/plugins from a support bundle
 COPY plugins.sh /usr/local/bin/plugins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
-# Install initial plugins
-COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
