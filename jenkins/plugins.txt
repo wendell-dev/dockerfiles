@@ -1,8 +1,0 @@
-matrix-auth:2.3
-build-timeout:1.19
-ws-cleanup:0.37
-ssh:2.6.1
-github-branch-source:2.4.2
-maven-plugin:3.2
-rancher:2.11
-docker-plugin:1.1.5
