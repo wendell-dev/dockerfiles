@@ -1,8 +1,8 @@
 # Jenkins with DooD (Docker outside of Docker)
-# 内置集成maven并配置阿里云镜像
+# Integration maven-3.6
 FROM jenkins/jenkins:alpine
 
-# maven
+# 集成maven并配置阿里云镜像
 RUN apk add --no-cache curl tar bash procps
 ARG MAVEN_VERSION=3.6.0
 ARG USER_HOME_DIR="/root"
@@ -20,11 +20,11 @@ COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
 COPY settings.xml /usr/share/maven/ref/
 ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 CMD ["mvn"]
+VOLUME /usr/share/maven/ref
 
-# docker
+# 集成docker,做客户端使用
 USER root
 RUN apk --update add docker \
   && apk add shadow \
   && usermod -aG docker jenkins
-
 USER jenkins
