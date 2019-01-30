@@ -5,7 +5,8 @@ FROM jenkins/jenkins:alpine
 
 USER root
 
-RUN apk add --no-cache curl tar bash procps git openssh-client unzip ttf-dejavu coreutils tini docker
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone \
+  && apk add --no-cache curl tar bash procps git openssh-client unzip ttf-dejavu coreutils tini docker
 
 # ======================= Integration maven-3.6.0 =======================
 ARG MAVEN_VERSION=3.6.0
