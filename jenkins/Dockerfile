@@ -5,20 +5,23 @@ FROM jenkins/jenkins:alpine
 
 USER root
 
-RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone \
-  && apk add --no-cache curl tar bash procps git openssh-client unzip ttf-dejavu coreutils tini docker
-
-# ======================= Integration maven-3.6.0 =======================
 ARG MAVEN_VERSION=3.6.0
 ARG MAVEN_SHA=fae9c12b570c3ba18116a4e26ea524b29f7279c17cbaadc3326ca72927368924d9131d11b9e851b8dc9162228b6fdea955446be41207a5cfc61283dd8a561d2f
 ARG MAVEN_BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
-RUN mkdir -p /usr/share/maven /usr/share/maven/ref/repository \
-  && chown jenkins:jenkins /usr/share/maven/ref/repository \
+
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone \
+  && echo "https://mirrors.aliyun.com/alpine/v3.8/main/" > /etc/apk/repositories \
+  && echo "https://mirrors.aliyun.com/alpine/v3.8/community/" >> /etc/apk/repositories \
+  && apk add --no-cache tar procps shadow docker \
+  && mkdir -p /usr/share/maven /usr/share/maven/ref/repository \
   && curl -fsSL -o /tmp/apache-maven.tar.gz ${MAVEN_BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
   && echo "${MAVEN_SHA}  /tmp/apache-maven.tar.gz" | sha512sum -c - \
   && tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 \
   && rm -f /tmp/apache-maven.tar.gz \
-  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn \
+  && usermod -aG 999 jenkins \
+  && chown 1000:1000 /usr/share/maven/ref/repository
+
 ENV MAVEN_HOME /usr/share/maven
 VOLUME /usr/share/maven/ref/repository
 COPY settings.xml /usr/share/maven/conf/settings.xml
