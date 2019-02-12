@@ -1,4 +1,4 @@
-# dockerfiles
+﻿# dockerfiles
 
 ## jenkins
 ### 拉取镜像
@@ -10,7 +10,6 @@ docker pull wendell023/jenkins-dood
 ```
 docker run -dit --restart unless-stopped \
   -p 8080:8080 -p 50000:50000 \
-  -u root \
   --name jenkins \
   -v maven-repo:/usr/share/maven/ref/repository \
   -v jenkins-home:/var/jenkins_home \
