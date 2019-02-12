@@ -21,7 +21,7 @@ RUN echo "https://mirrors.aliyun.com/alpine/v3.8/main/" > /etc/apk/repositories 
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn \
   && usermod -aG 999 jenkins \
   && chown 1000:1000 /usr/share/maven/ref/repository \
-  && apk del tzdata
+  && apk del tzdata shadow tar
 
 ENV MAVEN_HOME /usr/share/maven
 VOLUME /usr/share/maven/ref/repository
